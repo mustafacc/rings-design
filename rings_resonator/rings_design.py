@@ -6,7 +6,7 @@ It calculates transmission spectra, phase response, group delay, and dispersion
 characteristics for multi-ring configurations.
 
 Author: Mustafa Hammood
-Based on: H. Shoman MATLAB implementation
+Based on: Originally based on H. Shoman 2017 MATLAB implementation
 
 The number of rings is controlled by the length of the R (radii) list:
 - R = [r1, r2] creates a 2-ring system
@@ -22,6 +22,7 @@ import math
 import cmath
 import matplotlib.pyplot as plt
 from typing import Tuple, List
+import logging
 
 
 class RingResonatorSystem:
@@ -228,6 +229,8 @@ class RingResonatorSystem:
             - rN1: Drop port field reflection coefficients
             - tN1: Through port field reflection coefficients
         """
+        logger = logging.getLogger('RingResonatorGUI')
+        
         # Generate wavelength array in nanometers - exact match to original
         # Original: lambda_0 = np.linspace(wavelength_start, wavelength_stop, round((wavelength_stop-wavelength_start)*1e9/resolution))
         # where wavelength_start/stop are in meters and resolution is in nm
@@ -235,6 +238,8 @@ class RingResonatorSystem:
         wavelength_stop_m = self.wavelength_stop * 1e-9
         num_points = round((wavelength_stop_m - wavelength_start_m) * 1e9 / self.wavelength_resolution)
         wavelengths_nm = np.linspace(self.wavelength_start, self.wavelength_stop, num_points)
+        
+        logger.info(f"Analyzing {num_points} wavelength points")
         
         # Convert to meters for calculations
         lambda_0 = wavelengths_nm * 1e-9
@@ -253,6 +258,7 @@ class RingResonatorSystem:
         
         # Number of rings
         nor = len(self.ring_radii_um)
+        logger.info(f"Simulating {nor} rings with radii: {self.ring_radii_um} μm")
         
         # Create R and phi arrays like the original script
         R = [radius * 1e-6 for radius in self.ring_radii_um]  # Convert μm to m
@@ -267,7 +273,12 @@ class RingResonatorSystem:
         t1N, r1N, rN1, tN1 = [], [], [], []
         
         # Calculate response for each wavelength - exact match to original algorithm
-        for beta in beta0:
+        logger.info("Computing frequency response...")
+        for i, beta in enumerate(beta0):
+            if i % (len(beta0) // 10) == 0:
+                progress = int(100 * i / len(beta0))
+                logger.info(f"Progress: {progress}%")
+                
             # Start with first ring - exact match to original
             S = self._calculate_ring_transfer_matrix(
                 self.coupling_coeffs[0], phi[0], L[0], beta, alpha
@@ -291,6 +302,7 @@ class RingResonatorSystem:
             r1N.append(S_total[1,0])  # Electric field Through
             tN1.append(S_total[1,1])  # 
         
+        logger.info("System analysis complete")
         return wavelengths_nm, np.array(t1N), np.array(r1N), np.array(rN1), np.array(tN1)
 
 

@@ -14,12 +14,17 @@ jobs:
         python-version: [3.8, 3.9, '3.10', '3.11', '3.12']
 
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v3
     
     - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@v3
       with:
         python-version: ${{ matrix.python-version }}
+    
+    - name: Install system dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y xvfb libxkbcommon-x11-0 libxcb-icccm4 libxcb-image0 libxcb-keysyms1 libxcb-randr0 libxcb-render-util0 libxcb-xinerama0 libxcb-xinput0 libxcb-xfixes0
     
     - name: Install dependencies
       run: |
@@ -28,23 +33,23 @@ jobs:
     
     - name: Lint with flake8
       run: |
-        flake8 rings_design.py --count --select=E9,F63,F7,F82 --show-source --statistics
-        flake8 rings_design.py --count --exit-zero --max-complexity=10 --max-line-length=100 --statistics
+        flake8 rings_resonator/ --count --select=E9,F63,F7,F82 --show-source --statistics
+        flake8 rings_resonator/ --count --exit-zero --max-complexity=10 --max-line-length=100 --statistics
     
     - name: Check code formatting with black
       run: |
-        black --check rings_design.py
+        black --check rings_resonator/
     
     - name: Type check with mypy
       run: |
-        mypy rings_design.py
+        mypy rings_resonator/
     
     - name: Test with pytest
       run: |
-        pytest tests/ --cov=rings_design --cov-report=xml
+        xvfb-run -a pytest tests/ --cov=rings_resonator --cov-report=xml
     
     - name: Upload coverage reports to Codecov
-      uses: codecov/codecov-action@v3
+      uses: codecov/codecov-action@v1
       with:
         file: ./coverage.xml
         flags: unittests
@@ -57,10 +62,10 @@ jobs:
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v3
     
     - name: Set up Python
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@v3
       with:
         python-version: '3.11'
     

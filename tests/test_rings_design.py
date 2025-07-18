@@ -226,6 +226,30 @@ class TestIntegration:
         assert config['loss_db_per_cm'] == 3.5
 
 
+class TestGUIImport:
+    """Test cases for GUI module import."""
+    
+    def test_gui_import(self):
+        """Test that enhanced GUI module can be imported successfully."""
+        try:
+            from rings_resonator.rings_gui import (
+                RingResonatorStudio,
+                InteractiveGeometryPlot,
+                InteractiveAnalysisPlot,
+                ControlPanel,
+                SimulationWorker,
+                MplCanvas
+            )
+            assert RingResonatorStudio is not None
+            assert InteractiveGeometryPlot is not None
+            assert InteractiveAnalysisPlot is not None
+            assert ControlPanel is not None
+            assert SimulationWorker is not None
+            assert MplCanvas is not None
+        except ImportError as e:
+            pytest.fail(f"Failed to import enhanced GUI module: {e}")
+
+
 # Run tests if called directly
 if __name__ == "__main__":
     pytest.main([__file__]) 
