@@ -218,6 +218,7 @@ class RingResonatorSystem:
     def analyze_system(self) -> Tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
         """
         Perform theoretical analysis of the ring resonator system.
+        Matches the exact algorithm from the original MATLAB-based script.
         
         Returns:
             Tuple containing:
@@ -227,66 +228,68 @@ class RingResonatorSystem:
             - rN1: Drop port field reflection coefficients
             - tN1: Through port field reflection coefficients
         """
-        # Generate wavelength array in nanometers
-        num_points = round((self.wavelength_stop - self.wavelength_start) / self.wavelength_resolution)
+        # Generate wavelength array in nanometers - exact match to original
+        # Original: lambda_0 = np.linspace(wavelength_start, wavelength_stop, round((wavelength_stop-wavelength_start)*1e9/resolution))
+        # where wavelength_start/stop are in meters and resolution is in nm
+        wavelength_start_m = self.wavelength_start * 1e-9
+        wavelength_stop_m = self.wavelength_stop * 1e-9
+        num_points = round((wavelength_stop_m - wavelength_start_m) * 1e9 / self.wavelength_resolution)
         wavelengths_nm = np.linspace(self.wavelength_start, self.wavelength_stop, num_points)
         
         # Convert to meters for calculations
-        wavelengths_m = wavelengths_nm * 1e-9
+        lambda_0 = wavelengths_nm * 1e-9
         
-        # Calculate effective index using polynomial fit
-        wl_um = wavelengths_nm * 1e-3  # convert nm to micrometers
-        n_eff = (self.neff_coeffs[0] + 
-                self.neff_coeffs[1] * wl_um + 
-                self.neff_coeffs[2] * wl_um**2)
+        # Calculate effective index using polynomial fit - exact match to original
+        # Original: neff = (n1 + n2*(lambda_0*1e6) + n3*(lambda_0*1e6)**2)
+        neff = (self.neff_coeffs[0] + 
+                self.neff_coeffs[1] * (lambda_0 * 1e6) + 
+                self.neff_coeffs[2] * (lambda_0 * 1e6)**2)
         
         # Propagation constant
-        beta = 2 * math.pi * n_eff / wavelengths_m
+        beta0 = 2 * math.pi * neff / lambda_0
         
-        # Convert loss from dB/cm to dB/m
-        alpha_db_per_m = self.loss_db_per_cm * 100
+        # Convert loss from dB/cm to dB/m - exact match to original
+        alpha = self.loss_db_per_cm * 100
         
-        # Calculate ring circumferences (convert μm to m)
-        circumferences = [2 * math.pi * radius * 1e-6 for radius in self.ring_radii_um]
-        num_rings = len(self.ring_radii_um)
+        # Number of rings
+        nor = len(self.ring_radii_um)
+        
+        # Create R and phi arrays like the original script
+        R = [radius * 1e-6 for radius in self.ring_radii_um]  # Convert μm to m
+        R.append(0)  # Add dummy entry like original
+        phi = list(self.phase_shifts_rad)
+        phi.append(0)  # Add dummy entry like original
+        
+        # Calculate circumferences
+        L = [radius * (2 * math.pi) for radius in R]
         
         # Initialize result arrays
         t1N, r1N, rN1, tN1 = [], [], [], []
         
-        # Calculate response for each wavelength
-        for beta_val in beta:
-            # Start with first coupling region (bus to first ring)
+        # Calculate response for each wavelength - exact match to original algorithm
+        for beta in beta0:
+            # Start with first ring - exact match to original
             S = self._calculate_ring_transfer_matrix(
-                self.coupling_coeffs[0], self.phase_shifts_rad[0], 
-                circumferences[0], beta_val, alpha_db_per_m
+                self.coupling_coeffs[0], phi[0], L[0], beta, alpha
             )
             M = self._scattering_to_transfer_matrix(np.array(S))
             
-            # Cascade additional rings
-            for ring_idx in range(1, num_rings):
+            # Cascade additional rings - exact match to original matrix multiplication order
+            for no in range(nor):
                 S_ring = self._calculate_ring_transfer_matrix(
-                    self.coupling_coeffs[ring_idx], self.phase_shifts_rad[ring_idx],
-                    circumferences[ring_idx], beta_val, alpha_db_per_m
+                    self.coupling_coeffs[no + 1], phi[no + 1], L[no + 1], beta, alpha
                 )
-                M_ring = self._scattering_to_transfer_matrix(np.array(S_ring))
-                M = np.matmul(M_ring, M)
-            
-            # Add final coupling region (last ring to bus)
-            if num_rings > 1:
-                S_final = self._calculate_ring_transfer_matrix(
-                    self.coupling_coeffs[-1], 0, 0, beta_val, alpha_db_per_m
-                )
-                M_final = self._scattering_to_transfer_matrix(np.array(S_final))
-                M = np.matmul(M_final, M)
+                Mtemp = self._scattering_to_transfer_matrix(np.array(S_ring))
+                M = np.matmul(Mtemp, M)  # CRITICAL: same order as original script
             
             # Convert back to scattering parameters
             S_total = self._transfer_to_scattering_matrix(M)
             
-            # Store results
-            t1N.append(S_total[0,0])  # Drop port transmission
-            rN1.append(S_total[0,1])  # Drop port reflection
-            r1N.append(S_total[1,0])  # Through port reflection  
-            tN1.append(S_total[1,1])  # Through port transmission
+            # Store results - exact match to original assignments
+            t1N.append(S_total[0,0])  # Electric field Drop
+            rN1.append(S_total[0,1])  # 
+            r1N.append(S_total[1,0])  # Electric field Through
+            tN1.append(S_total[1,1])  # 
         
         return wavelengths_nm, np.array(t1N), np.array(r1N), np.array(rN1), np.array(tN1)
 
@@ -550,10 +553,10 @@ def main():
     # Configure the complete system in one call
     ring_system.configure(
         # Ring geometry (micrometers)
-        ring_radii_um=[35.0, 21.0],
+        ring_radii_um=[20.0, 15],
         
         # Coupling coefficients (power coupling)
-        coupling_coeffs=[0.1, 0.001, 0.1],  # [bus-ring1, ring1-ring2, ring2-bus]
+        coupling_coeffs=[0.1, 0.005, 0.1],  # [bus-ring1, ring1-ring2]
         
         # Phase shifts (radians)
         phase_shifts_rad=[0.0, 0.0],

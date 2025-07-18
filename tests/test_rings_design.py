@@ -7,7 +7,7 @@ of the ring resonator simulation and analysis tools.
 
 import pytest
 import numpy as np
-from rings_design import RingResonatorSystem, RingAnalyzer, RingPlotter
+from rings_resonator import RingResonatorSystem, RingAnalyzer, RingPlotter
 
 
 class TestRingResonatorSystem:

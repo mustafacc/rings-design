@@ -1,6 +1,15 @@
 # Ring Resonator Design
 
-A Python implementation for designing and simulating coupled ring resonator systems in silicon photonics. This package provides analysis capabilities for transmission spectra, phase response, group delay, and dispersion characteristics.
+A Python package for designing and simulating coupled ring resonator systems in silicon photonics. This package provides analysis capabilities for transmission spectra, phase response, group delay, and dispersion characteristics, with both command-line and graphical user interfaces.
+
+## Features
+
+- Multi-ring resonator systems (1 to N rings)
+- Scattering matrix calculations with transfer matrix method
+- Waveguide effective index dispersion modeling
+- Modern graphical user interface with real-time visualization
+- Interactive parameter control and configuration
+- Export capabilities for plots and configurations
 
 ## Installation
 
@@ -18,8 +27,33 @@ pip install -e .
 
 ## Usage
 
+### Graphical User Interface
+
+Launch the modern GUI application:
+
+```bash
+rings-gui
+```
+
+The GUI provides:
+- Interactive parameter controls for rings, coupling, and wavelength settings
+- Real-time ring geometry visualization
+- Multi-tab interface with ring geometry and analysis plots
+- Configuration save/load functionality
+- Export capabilities for plots
+
+### Command Line Interface
+
+Run the command-line version:
+
+```bash
+rings-design
+```
+
+### Python API
+
 ```python
-from rings_design import RingResonatorSystem, RingAnalyzer, RingPlotter
+from rings_resonator import RingResonatorSystem, RingAnalyzer, RingPlotter
 
 # Create and configure a 2-ring system
 system = RingResonatorSystem()
@@ -42,6 +76,35 @@ drop_dB, through_dB, total_dB = analyzer.calculate_power_response(t1N, r1N)
 plotter = RingPlotter()
 plotter.plot_transmission_spectrum(wavelengths, drop_dB, through_dB, total_dB)
 ```
+
+## GUI Interface
+
+The graphical interface includes:
+
+### Ring Geometry Visualization
+- Interactive display of ring resonator layout
+- Real-time updates as parameters change
+- Coupling coefficient annotations
+- Waveguide port labeling
+
+### Analysis Plots
+- Transmission spectrum (through and drop ports)
+- Phase response
+- Group delay
+- Group delay dispersion
+
+### Parameter Controls
+- Number of rings (1-5)
+- Ring radii configuration
+- Coupling coefficients
+- Phase shifts
+- Wavelength range and resolution
+- Material properties
+
+### Configuration Management
+- Save/load configurations to JSON files
+- Export plots to PDF
+- Progress tracking for simulations
 
 ## Configuration Examples
 
@@ -97,13 +160,6 @@ system.configure(
 | Extended C-band | 1520-1570 | 0.01 |
 | C+L band | 1480-1625 | 0.02 |
 
-## Command Line Interface
-
-Run a demonstration:
-```bash
-rings-design
-```
-
 ## Generated Plots
 
 The package generates five plots:
@@ -128,6 +184,7 @@ The simulation uses scattering matrix calculations for coupled ring resonator sy
 - Python 3.8+
 - NumPy >= 1.20.0
 - Matplotlib >= 3.5.0
+- CustomTkinter >= 5.0.0 (for GUI)
 
 ## Development
 
