@@ -16,11 +16,7 @@ A Python package for designing and simulating coupled ring resonator systems. Th
 
 ## Installation
 
-```bash
-pip install rings-resonator
-```
-
-Or install from source:
+install from source:
 
 ```bash
 git clone https://github.com/mustafacc/rings-design.git
