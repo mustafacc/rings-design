@@ -456,7 +456,7 @@ class RingPlotter:
         ax.set_ylabel("Effective Index")
         ax.set_title("Waveguide Effective Index Dispersion")
         ax.grid(True, alpha=0.3, linestyle="-", linewidth=0.8)
-        ax.set_xlim(tuple(wavelengths_nm[0]), tuple(wavelengths_nm[-1]))
+        ax.set_xlim(wavelengths_nm[0], wavelengths_nm[-1])
 
         # Add polynomial equation as text
         equation = f"$n_{{eff}} = {neff_coeffs[0]:.3f} + {neff_coeffs[1]:.3f}\\lambda + {neff_coeffs[2]:.3f}\\lambda^2$"
@@ -499,7 +499,7 @@ class RingPlotter:
         ax.set_title("Ring Resonator Transmission Spectrum")
         ax.legend(frameon=True, fancybox=True, shadow=True)
         ax.grid(True, alpha=0.3, linestyle="-", linewidth=0.8)
-        ax.set_xlim(tuple(wavelengths[0]), tuple(wavelengths[-1]))
+        ax.set_xlim(wavelengths[0], wavelengths[-1])
 
         plt.tight_layout()
         plt.savefig(save_path, dpi=300, bbox_inches="tight")
@@ -534,7 +534,7 @@ class RingPlotter:
         ax.set_title("Ring Resonator Phase Response")
         ax.legend(frameon=True, fancybox=True, shadow=True)
         ax.grid(True, alpha=0.3, linestyle="-", linewidth=0.8)
-        ax.set_xlim(tuple(wavelengths[0]), tuple(wavelengths[-1]))
+        ax.set_xlim(wavelengths[0], wavelengths[-1])
 
         plt.tight_layout()
         plt.savefig(save_path, dpi=300, bbox_inches="tight")
@@ -562,7 +562,7 @@ class RingPlotter:
         ax.set_title("Ring Resonator Group Delay")
         ax.legend(frameon=True, fancybox=True, shadow=True)
         ax.grid(True, alpha=0.3, linestyle="-", linewidth=0.8)
-        ax.set_xlim(tuple(wl_nm[0]), tuple(wl_nm[-1]))
+        ax.set_xlim(wl_nm[0], wl_nm[-1])
 
         plt.tight_layout()
         plt.savefig(save_path, dpi=300, bbox_inches="tight")
@@ -590,7 +590,7 @@ class RingPlotter:
         ax.set_title("Ring Resonator Group Delay Dispersion")
         ax.legend(frameon=True, fancybox=True, shadow=True)
         ax.grid(True, alpha=0.3, linestyle="-", linewidth=0.8)
-        ax.set_xlim(tuple(wl_nm[0]), tuple(wl_nm[-1]))
+        ax.set_xlim(wl_nm[0], wl_nm[-1])
 
         plt.tight_layout()
         plt.savefig(save_path, dpi=300, bbox_inches="tight")
