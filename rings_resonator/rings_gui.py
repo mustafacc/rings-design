@@ -62,7 +62,7 @@ except ImportError:
 class MplCanvas(FigureCanvas):
     """Enhanced matplotlib canvas widget with dark theme"""
 
-    def __init__(self, width=10, height=6, dpi=100):
+    def __init__(self, width=10, height=6, dpi=100) -> None:
         self.fig = Figure(figsize=(width, height), dpi=dpi, facecolor="#2e2e2e")
         self.axes = self.fig.add_subplot(111)
         super().__init__(self.fig)
@@ -82,7 +82,7 @@ class MplCanvas(FigureCanvas):
         # Enable tight layout to maximize plot area but prevent cut-off
         self.fig.tight_layout(rect=[0.02, 0.05, 0.98, 0.98], pad=0.2)
 
-    def clear_plot(self):
+    def clear_plot(self) -> None:
         """Clear the plot while maintaining dark theme"""
         self.axes.clear()
         self.axes.set_facecolor("#2e2e2e")
@@ -97,7 +97,7 @@ class MplCanvas(FigureCanvas):
 class InteractiveGeometryPlot(QWidget):
     """Enhanced ring geometry visualization with detailed annotations"""
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
         self.log_callback = None
         self.setup_ui()
@@ -105,12 +105,12 @@ class InteractiveGeometryPlot(QWidget):
         self.coupling_coeffs = []
         self.phase_shifts = []
 
-    def safe_log(self, message):
+    def safe_log(self, message) -> None:
         """Safely log a message if callback is available"""
         if self.log_callback:
             self.log_callback(message)
 
-    def setup_ui(self):
+    def setup_ui(self) -> None:
         layout = QVBoxLayout()
 
         # Control toolbar
@@ -158,7 +158,7 @@ class InteractiveGeometryPlot(QWidget):
         self.setLayout(layout)
         self.show_placeholder()
 
-    def show_placeholder(self):
+    def show_placeholder(self) -> None:
         """Show enhanced placeholder text"""
         self.canvas.clear_plot()
         self.canvas.axes.text(
@@ -175,7 +175,7 @@ class InteractiveGeometryPlot(QWidget):
         # Remove title to save vertical space
         self.canvas.draw()
 
-    def refresh_plot(self):
+    def refresh_plot(self) -> None:
         """Refresh the plot with current settings"""
         self.safe_log("Geometry plot refreshed due to display option change")
         if self.ring_radii:
@@ -408,18 +408,18 @@ class InteractiveGeometryPlot(QWidget):
 class InteractiveAnalysisPlot(QWidget):
     """Enhanced analysis results visualization with dark theme and interactivity"""
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
         self.log_callback = None
         self.setup_ui()
         self.current_results = None
 
-    def safe_log(self, message):
+    def safe_log(self, message) -> None:
         """Safely log a message if callback is available"""
         if self.log_callback:
             self.log_callback(message)
 
-    def setup_ui(self):
+    def setup_ui(self) -> None:
         layout = QVBoxLayout()
 
         # Enhanced control panel
@@ -488,7 +488,7 @@ class InteractiveAnalysisPlot(QWidget):
         self.setLayout(layout)
         self.show_placeholder()
 
-    def show_placeholder(self):
+    def show_placeholder(self) -> None:
         """Show enhanced placeholder text"""
         self.canvas.clear_plot()
         self.canvas.axes.text(
@@ -505,7 +505,7 @@ class InteractiveAnalysisPlot(QWidget):
         # Remove title to save vertical space
         self.canvas.draw()
 
-    def update_results(self, results: Dict[str, np.ndarray]):
+    def update_results(self, results: Dict[str, np.ndarray]) -> None:
         """Update with new simulation results"""
         self.current_results = results
         self.plot_selector.setEnabled(True)
@@ -514,7 +514,7 @@ class InteractiveAnalysisPlot(QWidget):
         self.show_markers.setEnabled(True)
         self.update_plot()
 
-    def update_plot(self):
+    def update_plot(self) -> None:
         """Update the current plot with enhanced styling"""
         if not self.current_results:
             self.show_placeholder()
@@ -672,7 +672,7 @@ class InteractiveAnalysisPlot(QWidget):
 
         print(f"Enhanced analysis plot updated: {selected_plot}")
 
-    def export_plot(self):
+    def export_plot(self) -> None:
         """Export the current plot with high quality"""
         self.safe_log("Export Plot button clicked")
 
@@ -703,21 +703,21 @@ class ControlPanel(QWidget):
 
     parameters_changed = Signal()
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
         self.log_callback = None
         self.setup_ui()
 
-    def safe_log(self, message):
+    def safe_log(self, message) -> None:
         """Safely log a message if callback is available"""
         if self.log_callback:
             self.log_callback(message)
 
-    def log_parameter_change(self, parameter_name, value, unit=""):
+    def log_parameter_change(self, parameter_name, value, unit="") -> None:
         """Log parameter changes with clear descriptions"""
         self.safe_log(f"Parameter changed: {parameter_name} = {value}{unit}")
 
-    def setup_ui(self):
+    def setup_ui(self) -> None:
         layout = QVBoxLayout()
 
         # Enhanced title
@@ -997,7 +997,7 @@ class ControlPanel(QWidget):
 
         self.setLayout(layout)
 
-    def update_ring_controls(self):
+    def update_ring_controls(self) -> None:
         """Update ring parameter controls with enhanced styling"""
         # Clear existing controls
         for i in reversed(range(self.ring_layout.count())):
@@ -1105,7 +1105,7 @@ class ControlPanel(QWidget):
             ],
         }
 
-    def save_config(self):
+    def save_config(self) -> None:
         """Save configuration"""
         self.safe_log("Save Configuration button clicked")
 
@@ -1120,7 +1120,7 @@ class ControlPanel(QWidget):
             self.safe_log(f"Configuration saved to: {filename}")
             QMessageBox.information(self, "Success", f"Configuration saved to {filename}")
 
-    def load_config(self):
+    def load_config(self) -> None:
         """Load configuration"""
         self.safe_log("Load Configuration button clicked")
 
@@ -1146,12 +1146,12 @@ class SimulationWorker(QObject):
     simulation_finished = Signal(dict)
     simulation_error = Signal(str)
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
         self.system = RingResonatorSystem()
         self.analyzer = RingAnalyzer()
 
-    def run_simulation(self, config: Dict):
+    def run_simulation(self, config: Dict) -> None:
         """Run the simulation"""
         try:
             self.log_message.emit("Starting simulation...")
@@ -1218,7 +1218,7 @@ class SimulationWorker(QObject):
 class RingResonatorStudio(QMainWindow):
     """Enhanced main application window"""
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
         self.setWindowTitle("Ring Resonator Design Studio - Enhanced")
         self.setMinimumSize(1400, 900)
@@ -1269,7 +1269,7 @@ class RingResonatorStudio(QMainWindow):
         self.setup_ui()
         self.connect_signals()
 
-    def setup_ui(self):
+    def setup_ui(self) -> None:
         """Setup the enhanced UI"""
         central_widget = QWidget()
         self.setCentralWidget(central_widget)
@@ -1359,7 +1359,7 @@ class RingResonatorStudio(QMainWindow):
         # Status bar
         self.statusBar().showMessage("Ready - Enhanced Ring Resonator Design Studio")
 
-    def connect_signals(self):
+    def connect_signals(self) -> None:
         """Connect signals"""
         self.control_panel.parameters_changed.connect(self.update_geometry)
         self.control_panel.run_btn.clicked.connect(self.run_simulation)
@@ -1372,14 +1372,14 @@ class RingResonatorStudio(QMainWindow):
         # Initial geometry update
         self.update_geometry()
 
-    def update_geometry(self):
+    def update_geometry(self) -> None:
         """Update geometry plot"""
         config = self.control_panel.get_configuration()
         self.geometry_plot.update_geometry(
             config["ring_radii_um"], config["coupling_coeffs"], config["phase_shifts_rad"]
         )
 
-    def run_simulation(self):
+    def run_simulation(self) -> None:
         """Run simulation"""
         config = self.control_panel.get_configuration()
 
@@ -1399,15 +1399,15 @@ class RingResonatorStudio(QMainWindow):
         # Run simulation in worker thread
         QTimer.singleShot(0, lambda: self.worker.run_simulation(config))
 
-    def update_progress(self, value: int):
+    def update_progress(self, value: int) -> None:
         """Update progress bar"""
         self.control_panel.progress_bar.setValue(value)
 
-    def add_log_message(self, message: str):
+    def add_log_message(self, message: str) -> None:
         """Add log message"""
         self.log_text.append(message)
 
-    def simulation_finished(self, results: Dict):
+    def simulation_finished(self, results: Dict) -> None:
         """Handle simulation completion"""
         self.control_panel.run_btn.setEnabled(True)
         self.control_panel.progress_bar.setVisible(False)
@@ -1419,7 +1419,7 @@ class RingResonatorStudio(QMainWindow):
         self.add_log_message("Simulation completed successfully!")
         print(f"Enhanced simulation completed with {len(results['wavelengths'])} wavelength points")
 
-    def simulation_error(self, error: str):
+    def simulation_error(self, error: str) -> None:
         """Handle simulation error"""
         self.control_panel.run_btn.setEnabled(True)
         self.control_panel.progress_bar.setVisible(False)
@@ -1427,7 +1427,7 @@ class RingResonatorStudio(QMainWindow):
 
         QMessageBox.critical(self, "Simulation Error", f"Simulation failed: {error}")
 
-    def closeEvent(self, event):
+    def closeEvent(self, event) -> None:
         """Handle close event"""
         if self.worker_thread.isRunning():
             self.worker_thread.quit()
@@ -1435,7 +1435,7 @@ class RingResonatorStudio(QMainWindow):
         event.accept()
 
 
-def main():
+def main() -> None:
     """Main entry point"""
     app = QApplication(sys.argv)
     app.setApplicationName("Ring Resonator Design Studio - Enhanced")

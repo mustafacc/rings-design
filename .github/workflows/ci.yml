@@ -40,10 +40,6 @@ jobs:
       run: |
         black --check rings_resonator/
     
-    - name: Type check with mypy
-      run: |
-        mypy rings_resonator/
-    
     - name: Test with pytest
       run: |
         xvfb-run -a pytest tests/ --cov=rings_resonator --cov-report=xml

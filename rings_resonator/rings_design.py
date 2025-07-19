@@ -21,8 +21,9 @@ import numpy as np
 import math
 import cmath
 import matplotlib.pyplot as plt
-from typing import Tuple, List
+from typing import Tuple, List, Optional
 import logging
+from numpy import ndarray
 
 
 class RingResonatorSystem:
@@ -33,7 +34,7 @@ class RingResonatorSystem:
     All ring radii are specified in micrometers for typical silicon photonics scales.
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Initialize the ring resonator system with default parameters."""
         self._set_default_parameters()
 
@@ -60,14 +61,14 @@ class RingResonatorSystem:
 
     def configure(
         self,
-        ring_radii_um: List[float] = None,
-        coupling_coeffs: List[float] = None,
-        phase_shifts_rad: List[float] = None,
-        wavelength_start_nm: float = None,
-        wavelength_stop_nm: float = None,
-        wavelength_resolution_nm: float = None,
-        loss_db_per_cm: float = None,
-        neff_coeffs: List[float] = None,
+        ring_radii_um: Optional[List[float]] = None,
+        coupling_coeffs: Optional[List[float]] = None,
+        phase_shifts_rad: Optional[List[float]] = None,
+        wavelength_start_nm: Optional[float] = None,
+        wavelength_stop_nm: Optional[float] = None,
+        wavelength_resolution_nm: Optional[float] = None,
+        loss_db_per_cm: Optional[float] = None,
+        neff_coeffs: Optional[List[float]] = None,
     ) -> None:
         """
         Configure all ring resonator system parameters.
@@ -411,7 +412,7 @@ class RingPlotter:
     """Utility class for plotting ring resonator system responses."""
 
     @staticmethod
-    def _setup_professional_style():
+    def _setup_professional_style() -> None:
         """Setup professional matplotlib styling."""
         plt.rcParams.update(
             {
@@ -455,7 +456,7 @@ class RingPlotter:
         ax.set_ylabel("Effective Index")
         ax.set_title("Waveguide Effective Index Dispersion")
         ax.grid(True, alpha=0.3, linestyle="-", linewidth=0.8)
-        ax.set_xlim(wavelengths_nm[0], wavelengths_nm[-1])
+        ax.set_xlim(tuple(wavelengths_nm[0]), tuple(wavelengths_nm[-1]))
 
         # Add polynomial equation as text
         equation = f"$n_{{eff}} = {neff_coeffs[0]:.3f} + {neff_coeffs[1]:.3f}\\lambda + {neff_coeffs[2]:.3f}\\lambda^2$"
@@ -498,7 +499,7 @@ class RingPlotter:
         ax.set_title("Ring Resonator Transmission Spectrum")
         ax.legend(frameon=True, fancybox=True, shadow=True)
         ax.grid(True, alpha=0.3, linestyle="-", linewidth=0.8)
-        ax.set_xlim(wavelengths[0], wavelengths[-1])
+        ax.set_xlim(tuple(wavelengths[0]), tuple(wavelengths[-1]))
 
         plt.tight_layout()
         plt.savefig(save_path, dpi=300, bbox_inches="tight")
@@ -533,7 +534,7 @@ class RingPlotter:
         ax.set_title("Ring Resonator Phase Response")
         ax.legend(frameon=True, fancybox=True, shadow=True)
         ax.grid(True, alpha=0.3, linestyle="-", linewidth=0.8)
-        ax.set_xlim(wavelengths[0], wavelengths[-1])
+        ax.set_xlim(tuple(wavelengths[0]), tuple(wavelengths[-1]))
 
         plt.tight_layout()
         plt.savefig(save_path, dpi=300, bbox_inches="tight")
@@ -561,7 +562,7 @@ class RingPlotter:
         ax.set_title("Ring Resonator Group Delay")
         ax.legend(frameon=True, fancybox=True, shadow=True)
         ax.grid(True, alpha=0.3, linestyle="-", linewidth=0.8)
-        ax.set_xlim(wl_nm[0], wl_nm[-1])
+        ax.set_xlim(tuple(wl_nm[0]), tuple(wl_nm[-1]))
 
         plt.tight_layout()
         plt.savefig(save_path, dpi=300, bbox_inches="tight")
@@ -589,14 +590,14 @@ class RingPlotter:
         ax.set_title("Ring Resonator Group Delay Dispersion")
         ax.legend(frameon=True, fancybox=True, shadow=True)
         ax.grid(True, alpha=0.3, linestyle="-", linewidth=0.8)
-        ax.set_xlim(wl_nm[0], wl_nm[-1])
+        ax.set_xlim(tuple(wl_nm[0]), tuple(wl_nm[-1]))
 
         plt.tight_layout()
         plt.savefig(save_path, dpi=300, bbox_inches="tight")
         plt.show()
 
 
-def main():
+def main() -> None:
     """
     Main function demonstrating ring resonator system analysis.
 

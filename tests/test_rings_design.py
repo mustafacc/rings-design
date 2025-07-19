@@ -13,7 +13,7 @@ from rings_resonator import RingResonatorSystem, RingAnalyzer, RingPlotter
 class TestRingResonatorSystem:
     """Test cases for the RingResonatorSystem class."""
 
-    def test_initialization(self):
+    def test_initialization(self) -> None:
         """Test that the system initializes with default parameters."""
         system = RingResonatorSystem()
 
@@ -25,7 +25,7 @@ class TestRingResonatorSystem:
         assert system.loss_db_per_cm == 4.0
         assert len(system.neff_coeffs) == 3
 
-    def test_configuration_validation(self):
+    def test_configuration_validation(self) -> None:
         """Test parameter validation in the configure method."""
         system = RingResonatorSystem()
 
@@ -41,7 +41,7 @@ class TestRingResonatorSystem:
         with pytest.raises(ValueError, match="Need 3 coupling coefficients for 2 rings"):
             system.configure(ring_radii_um=[35.0, 21.0], coupling_coeffs=[0.1, 0.2])
 
-    def test_single_ring_configuration(self):
+    def test_single_ring_configuration(self) -> None:
         """Test configuration of a single ring system."""
         system = RingResonatorSystem()
         system.configure(
@@ -57,7 +57,7 @@ class TestRingResonatorSystem:
         assert system.wavelength_start == 1550.0
         assert system.wavelength_stop == 1560.0
 
-    def test_multi_ring_configuration(self):
+    def test_multi_ring_configuration(self) -> None:
         """Test configuration of a multi-ring system."""
         system = RingResonatorSystem()
         system.configure(
@@ -70,7 +70,7 @@ class TestRingResonatorSystem:
         assert len(system.coupling_coeffs) == 4
         assert len(system.phase_shifts_rad) == 3
 
-    def test_analyze_system(self):
+    def test_analyze_system(self) -> None:
         """Test that the analyze_system method returns correct array shapes."""
         system = RingResonatorSystem()
         system.configure(
@@ -101,7 +101,7 @@ class TestRingResonatorSystem:
 class TestRingAnalyzer:
     """Test cases for the RingAnalyzer class."""
 
-    def test_power_response_calculation(self):
+    def test_power_response_calculation(self) -> None:
         """Test power response calculation."""
         # Create test data
         t1N = np.array([0.5 + 0.3j, 0.7 + 0.2j])
@@ -120,7 +120,7 @@ class TestRingAnalyzer:
         assert np.all(through_dB <= 0)
         assert np.all(total_dB <= 0)
 
-    def test_phase_response_calculation(self):
+    def test_phase_response_calculation(self) -> None:
         """Test phase response calculation."""
         # Create test data
         t1N = np.array([0.5 + 0.3j, 0.7 + 0.2j])
@@ -137,7 +137,7 @@ class TestRingAnalyzer:
         assert np.all(np.abs(drop_phase) <= 10 * np.pi)  # Reasonable phase range
         assert np.all(np.abs(through_phase) <= 10 * np.pi)
 
-    def test_group_delay_calculation(self):
+    def test_group_delay_calculation(self) -> None:
         """Test group delay calculation."""
         # Create test data
         wavelengths = np.linspace(1550, 1560, 100) * 1e-9  # in meters
@@ -161,7 +161,7 @@ class TestRingAnalyzer:
 class TestRingPlotter:
     """Test cases for the RingPlotter class."""
 
-    def test_professional_style_setup(self):
+    def test_professional_style_setup(self) -> None:
         """Test that the professional style setup works without errors."""
         # This test mainly ensures no exceptions are raised
         RingPlotter._setup_professional_style()
@@ -173,7 +173,7 @@ class TestRingPlotter:
 class TestIntegration:
     """Integration tests for the complete workflow."""
 
-    def test_complete_workflow(self):
+    def test_complete_workflow(self) -> None:
         """Test the complete workflow from configuration to analysis."""
         # Create and configure system
         system = RingResonatorSystem()
@@ -203,7 +203,7 @@ class TestIntegration:
         assert len(through_dB) == len(wavelengths)
         assert len(total_dB) == len(wavelengths)
 
-    def test_configuration_retrieval(self):
+    def test_configuration_retrieval(self) -> None:
         """Test that configuration can be retrieved correctly."""
         system = RingResonatorSystem()
         system.configure(
@@ -229,7 +229,7 @@ class TestIntegration:
 class TestGUIImport:
     """Test cases for GUI module import."""
 
-    def test_gui_import(self):
+    def test_gui_import(self) -> None:
         """Test that enhanced GUI module can be imported successfully."""
         try:
             from rings_resonator.rings_gui import (

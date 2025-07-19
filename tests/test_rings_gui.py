@@ -32,16 +32,16 @@ class TestMplCanvas:
     """Test the enhanced matplotlib canvas"""
 
     @pytest.fixture
-    def app(self):
+    def app(self) -> None:
         """Create QApplication instance"""
         return QApplication.instance() or QApplication(sys.argv)
 
     @pytest.fixture
-    def canvas(self, app):
+    def canvas(self, app) -> None:
         """Create MplCanvas instance"""
         return MplCanvas(width=8, height=6)
 
-    def test_canvas_creation(self, canvas):
+    def test_canvas_creation(self, canvas) -> None:
         """Test canvas creation with dark theme"""
         assert canvas.fig is not None
         assert canvas.axes is not None
@@ -50,7 +50,7 @@ class TestMplCanvas:
         assert canvas.fig.get_facecolor() is not None
         assert canvas.axes.get_facecolor() is not None
 
-    def test_clear_plot(self, canvas):
+    def test_clear_plot(self, canvas) -> None:
         """Test clearing plot maintains dark theme"""
         canvas.clear_plot()
         # Check that colors are set (not testing exact values due to matplotlib format variations)
@@ -63,16 +63,16 @@ class TestInteractiveGeometryPlot:
     """Test the enhanced geometry plot widget"""
 
     @pytest.fixture
-    def app(self):
+    def app(self) -> None:
         """Create QApplication instance"""
         return QApplication.instance() or QApplication(sys.argv)
 
     @pytest.fixture
-    def geometry_plot(self, app):
+    def geometry_plot(self, app) -> None:
         """Create InteractiveGeometryPlot instance"""
         return InteractiveGeometryPlot()
 
-    def test_widget_creation(self, geometry_plot):
+    def test_widget_creation(self, geometry_plot) -> None:
         """Test widget creation and initialization"""
         assert geometry_plot.canvas is not None
         assert geometry_plot.nav_toolbar is not None
@@ -83,7 +83,7 @@ class TestInteractiveGeometryPlot:
         assert geometry_plot.coupling_coeffs == []
         assert geometry_plot.phase_shifts == []
 
-    def test_show_placeholder(self, geometry_plot):
+    def test_show_placeholder(self, geometry_plot) -> None:
         """Test placeholder display"""
         geometry_plot.show_placeholder()
         # Check that placeholder text is displayed (no title to save space)
@@ -93,13 +93,13 @@ class TestInteractiveGeometryPlot:
         placeholder_found = any("Configure Ring Parameters" in text.get_text() for text in texts)
         assert placeholder_found
 
-    def test_update_geometry_empty(self, geometry_plot):
+    def test_update_geometry_empty(self, geometry_plot) -> None:
         """Test geometry update with empty data"""
         geometry_plot.update_geometry([], [])
         assert geometry_plot.ring_radii == []
         assert geometry_plot.coupling_coeffs == []
 
-    def test_update_geometry_with_data(self, geometry_plot):
+    def test_update_geometry_with_data(self, geometry_plot) -> None:
         """Test geometry update with actual data"""
         ring_radii = [35.0, 32.0]
         coupling_coeffs = [0.1, 0.001, 0.1]
@@ -114,7 +114,7 @@ class TestInteractiveGeometryPlot:
         assert geometry_plot.canvas.axes.get_xlabel() == ""
         assert geometry_plot.canvas.axes.get_ylabel() == ""
 
-    def test_checkboxes_functionality(self, geometry_plot):
+    def test_checkboxes_functionality(self, geometry_plot) -> None:
         """Test checkbox controls"""
         # Test initial states
         assert geometry_plot.show_labels.isChecked() == True
@@ -125,7 +125,7 @@ class TestInteractiveGeometryPlot:
         geometry_plot.show_labels.setChecked(False)
         assert geometry_plot.show_labels.isChecked() == False
 
-    def test_refresh_plot(self, geometry_plot):
+    def test_refresh_plot(self, geometry_plot) -> None:
         """Test plot refresh functionality"""
         # Set up data
         geometry_plot.ring_radii = [35.0, 32.0]
@@ -140,16 +140,16 @@ class TestInteractiveAnalysisPlot:
     """Test the enhanced analysis plot widget"""
 
     @pytest.fixture
-    def app(self):
+    def app(self) -> None:
         """Create QApplication instance"""
         return QApplication.instance() or QApplication(sys.argv)
 
     @pytest.fixture
-    def analysis_plot(self, app):
+    def analysis_plot(self, app) -> None:
         """Create InteractiveAnalysisPlot instance"""
         return InteractiveAnalysisPlot()
 
-    def test_widget_creation(self, analysis_plot):
+    def test_widget_creation(self, analysis_plot) -> None:
         """Test widget creation and initialization"""
         assert analysis_plot.canvas is not None
         assert analysis_plot.nav_toolbar is not None
@@ -159,7 +159,7 @@ class TestInteractiveAnalysisPlot:
         assert analysis_plot.export_btn is not None
         assert analysis_plot.current_results is None
 
-    def test_show_placeholder(self, analysis_plot):
+    def test_show_placeholder(self, analysis_plot) -> None:
         """Test placeholder display"""
         analysis_plot.show_placeholder()
         # Check that placeholder text is displayed (no title to save space)
@@ -169,7 +169,7 @@ class TestInteractiveAnalysisPlot:
         placeholder_found = any("Run Simulation to View" in text.get_text() for text in texts)
         assert placeholder_found
 
-    def test_plot_selector_options(self, analysis_plot):
+    def test_plot_selector_options(self, analysis_plot) -> None:
         """Test plot selector has all required options"""
         expected_options = [
             "Transmission Spectrum",
@@ -182,7 +182,7 @@ class TestInteractiveAnalysisPlot:
         for i, option in enumerate(expected_options):
             assert analysis_plot.plot_selector.itemText(i) == option
 
-    def test_update_results(self, analysis_plot):
+    def test_update_results(self, analysis_plot) -> None:
         """Test updating results enables controls"""
         # Create test results
         wavelengths = np.linspace(1520, 1570, 100)
@@ -207,7 +207,7 @@ class TestInteractiveAnalysisPlot:
         assert analysis_plot.show_grid.isEnabled() == True
         assert analysis_plot.show_markers.isEnabled() == True
 
-    def test_plot_types(self, analysis_plot):
+    def test_plot_types(self, analysis_plot) -> None:
         """Test all plot types can be displayed"""
         # Create test results
         wavelengths = np.linspace(1520, 1570, 100)
@@ -243,7 +243,7 @@ class TestInteractiveAnalysisPlot:
             y_label = analysis_plot.canvas.axes.get_ylabel()
             assert y_label is not None and len(y_label) > 0
 
-    def test_plot_options(self, analysis_plot):
+    def test_plot_options(self, analysis_plot) -> None:
         """Test plot options functionality"""
         # Test grid toggle
         analysis_plot.show_grid.setChecked(True)
@@ -253,14 +253,14 @@ class TestInteractiveAnalysisPlot:
         analysis_plot.show_markers.setChecked(True)
         assert analysis_plot.show_markers.isChecked() == True
 
-    def test_export_plot_no_data(self, analysis_plot):
+    def test_export_plot_no_data(self, analysis_plot) -> None:
         """Test export plot with no data"""
         # Mock the message box to avoid user prompt
         with patch("PySide6.QtWidgets.QMessageBox.warning") as mock_warning:
             analysis_plot.export_plot()
             mock_warning.assert_called_once()
 
-    def test_export_plot_with_data(self, analysis_plot, tmp_path):
+    def test_export_plot_with_data(self, analysis_plot, tmp_path) -> None:
         """Test export plot with data"""
         # Create test results
         wavelengths = np.linspace(1520, 1570, 100)
@@ -295,16 +295,16 @@ class TestControlPanel:
     """Test the enhanced control panel"""
 
     @pytest.fixture
-    def app(self):
+    def app(self) -> None:
         """Create QApplication instance"""
         return QApplication.instance() or QApplication(sys.argv)
 
     @pytest.fixture
-    def control_panel(self, app):
+    def control_panel(self, app) -> None:
         """Create ControlPanel instance"""
         return ControlPanel()
 
-    def test_widget_creation(self, control_panel):
+    def test_widget_creation(self, control_panel) -> None:
         """Test widget creation and initialization"""
         assert control_panel.num_rings_spin is not None
         assert control_panel.ring_group is not None
@@ -320,7 +320,7 @@ class TestControlPanel:
         assert control_panel.save_btn is not None
         assert control_panel.load_btn is not None
 
-    def test_initial_values(self, control_panel):
+    def test_initial_values(self, control_panel) -> None:
         """Test initial parameter values"""
         assert control_panel.num_rings_spin.value() == 2
         assert control_panel.wl_start_spin.value() == 1520.0
@@ -332,7 +332,7 @@ class TestControlPanel:
         assert abs(control_panel.neff_1_spin.value() - (-0.983)) < 0.01
         assert abs(control_panel.neff_2_spin.value() - (-0.046)) < 0.01
 
-    def test_ring_controls_update(self, control_panel):
+    def test_ring_controls_update(self, control_panel) -> None:
         """Test ring controls update when number of rings changes"""
         # Start with 2 rings
         assert len(control_panel.ring_controls) == 2
@@ -347,7 +347,7 @@ class TestControlPanel:
         assert len(control_panel.coupling_controls) == 4  # N+1 coupling coefficients
         assert len(control_panel.phase_controls) == 3
 
-    def test_get_configuration(self, control_panel):
+    def test_get_configuration(self, control_panel) -> None:
         """Test getting configuration dictionary"""
         config = control_panel.get_configuration()
 
@@ -375,7 +375,7 @@ class TestControlPanel:
         assert len(config["phase_shifts_rad"]) == 2  # N phase shifts
         assert len(config["neff_coeffs"]) == 3  # n0, n1, n2
 
-    def test_save_load_config(self, control_panel, tmp_path):
+    def test_save_load_config(self, control_panel, tmp_path) -> None:
         """Test configuration save/load functionality"""
         # Create test config file
         config_file = tmp_path / "test_config.json"
@@ -402,28 +402,28 @@ class TestSimulationWorker:
     """Test the simulation worker"""
 
     @pytest.fixture
-    def app(self):
+    def app(self) -> None:
         """Create QApplication instance"""
         return QApplication.instance() or QApplication(sys.argv)
 
     @pytest.fixture
-    def worker(self, app):
+    def worker(self, app) -> None:
         """Create SimulationWorker instance"""
         return SimulationWorker()
 
-    def test_worker_creation(self, worker):
+    def test_worker_creation(self, worker) -> None:
         """Test worker creation and initialization"""
         assert worker.system is not None
         assert worker.analyzer is not None
 
-    def test_simulation_signals(self, worker):
+    def test_simulation_signals(self, worker) -> None:
         """Test that worker has required signals"""
         assert hasattr(worker, "progress_updated")
         assert hasattr(worker, "log_message")
         assert hasattr(worker, "simulation_finished")
         assert hasattr(worker, "simulation_error")
 
-    def test_run_simulation(self, worker):
+    def test_run_simulation(self, worker) -> None:
         """Test running simulation with valid configuration"""
         config = {
             "ring_radii_um": [35.0, 32.0],
@@ -478,16 +478,16 @@ class TestRingResonatorStudio:
     """Test the main application window"""
 
     @pytest.fixture
-    def app(self):
+    def app(self) -> None:
         """Create QApplication instance"""
         return QApplication.instance() or QApplication(sys.argv)
 
     @pytest.fixture
-    def main_window(self, app):
+    def main_window(self, app) -> None:
         """Create RingResonatorStudio instance"""
         return RingResonatorStudio()
 
-    def test_window_creation(self, main_window):
+    def test_window_creation(self, main_window) -> None:
         """Test main window creation and initialization"""
         assert main_window.control_panel is not None
         assert main_window.geometry_plot is not None
@@ -496,13 +496,13 @@ class TestRingResonatorStudio:
         assert main_window.worker is not None
         assert main_window.worker_thread is not None
 
-    def test_window_properties(self, main_window):
+    def test_window_properties(self, main_window) -> None:
         """Test window properties"""
         assert "Ring Resonator Design Studio" in main_window.windowTitle()
         assert main_window.minimumSize().width() >= 1400
         assert main_window.minimumSize().height() >= 900
 
-    def test_signal_connections(self, main_window):
+    def test_signal_connections(self, main_window) -> None:
         """Test signal connections"""
         # Test that parameter changes trigger geometry updates
         config = main_window.control_panel.get_configuration()
@@ -511,7 +511,7 @@ class TestRingResonatorStudio:
         # Should not crash
         assert True
 
-    def test_simulation_workflow(self, main_window):
+    def test_simulation_workflow(self, main_window) -> None:
         """Test complete simulation workflow"""
         # Start simulation
         main_window.run_simulation()
@@ -546,7 +546,7 @@ class TestRingResonatorStudio:
         # Check that analysis plot was updated
         assert main_window.analysis_plot.current_results == results
 
-    def test_window_cleanup(self, main_window):
+    def test_window_cleanup(self, main_window) -> None:
         """Test window cleanup on close"""
         # Should not crash
         main_window.close()
@@ -557,11 +557,11 @@ class TestLogging:
     """Test logging functionality"""
 
     @pytest.fixture
-    def app(self):
+    def app(self) -> None:
         """Create QApplication instance"""
         return QApplication.instance() or QApplication(sys.argv)
 
-    def test_logging_setup(self, app):
+    def test_logging_setup(self, app) -> None:
         """Test that logging callbacks are properly set up"""
         from rings_resonator.rings_gui import RingResonatorStudio
 
@@ -579,7 +579,7 @@ class TestLogging:
 
         window.close()
 
-    def test_parameter_logging(self, app):
+    def test_parameter_logging(self, app) -> None:
         """Test that parameter changes are logged"""
         from rings_resonator.rings_gui import ControlPanel
 
@@ -599,11 +599,11 @@ class TestIntegration:
     """Integration tests for the complete GUI"""
 
     @pytest.fixture
-    def app(self):
+    def app(self) -> None:
         """Create QApplication instance"""
         return QApplication.instance() or QApplication(sys.argv)
 
-    def test_full_gui_workflow(self, app):
+    def test_full_gui_workflow(self, app) -> None:
         """Test complete GUI workflow from creation to simulation"""
         # Create main window
         window = RingResonatorStudio()
@@ -633,7 +633,7 @@ class TestIntegration:
         # Cleanup
         window.close()
 
-    def test_gui_with_different_configurations(self, app):
+    def test_gui_with_different_configurations(self, app) -> None:
         """Test GUI with various ring configurations"""
         window = RingResonatorStudio()
 
@@ -653,7 +653,7 @@ class TestIntegration:
         # Cleanup
         window.close()
 
-    def test_plot_interactivity(self, app):
+    def test_plot_interactivity(self, app) -> None:
         """Test plot interactivity features"""
         window = RingResonatorStudio()
 
@@ -685,7 +685,7 @@ class TestIntegration:
         window.close()
 
 
-def test_gui_import():
+def test_gui_import() -> None:
     """Test that GUI module can be imported successfully"""
     from rings_resonator.rings_gui import (
         RingResonatorStudio,
