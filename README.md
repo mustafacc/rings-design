@@ -23,7 +23,7 @@ pip install rings-resonator
 Or install from source:
 
 ```bash
-git clone https://github.com/SiEPIC/rings-design.git
+git clone https://github.com/mustafacc/rings-design.git
 cd rings-design
 pip install -e .
 ```

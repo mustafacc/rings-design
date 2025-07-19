@@ -13,6 +13,6 @@ __email__ = "mustafa@siepic.com"
 
 __all__ = [
     "RingResonatorSystem",
-    "RingAnalyzer", 
+    "RingAnalyzer",
     "RingPlotter",
-] 
+]

@@ -175,7 +175,6 @@ Thumbs.db
 # Keep example plots but ignore temporary ones
 *.pdf
 !example_*.pdf
-*.png
 *.jpg
 *.svg
 

@@ -1,1 +1,1 @@
-"""Test package for the Ring Resonator Design Toolkit.""" 
+"""Test package for the Ring Resonator Design Toolkit."""
