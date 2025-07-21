@@ -2,6 +2,8 @@
 
 A Python package for designing and simulating coupled ring resonator systems. This package provides tools for analyzing transmission spectra, phase response, group delay, and dispersion characteristics, with both command-line and graphical user interfaces.
 
+Check out the web application deployment of this solver on: https://mustafa.sh/widgets
+
 ![ui.png](ui.png)
 
 ## Features
